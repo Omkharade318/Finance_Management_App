@@ -1,4 +1,3 @@
-
 import 'package:finance/data/money_manage.dart';
 
 List<money> getter(){
@@ -12,7 +11,7 @@ List<money> getter(){
   money starbucks = money();
   starbucks.buy = true;
   starbucks.fee = 'Rs 100';
-  starbucks.image = 'food.png';
+  starbucks.image = 'Food.png';
   starbucks.name = 'starbucks';
   starbucks.time = 'yesterday';
 

@@ -11,7 +11,7 @@ List<money> getterTop() {
   money starbucks = money();
   starbucks.buy = true;
   starbucks.fee = '- Rs 100';
-  starbucks.image = 'food.png';
+  starbucks.image = 'Food.png';
   starbucks.name = 'starbucks';
   starbucks.time = 'yesterday';
 

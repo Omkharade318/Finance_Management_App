@@ -1,5 +1,5 @@
+import 'package:finance/screens/add.dart';
 import 'package:flutter/material.dart';
-
 import '../screens/home.dart';
 import '../screens/statistics.dart';
 
@@ -26,7 +26,8 @@ class _BottomState extends State<Bottom> {
       body: screen[indexColor],
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddScreen()));
         },
         backgroundColor: Color(0xff368983),
         child: Icon(
