@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+
+import '../data/model/add_data.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -8,6 +11,9 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
+
+  final box = Hive.box<AddData>('data');
+
   final TextEditingController _amount = TextEditingController();
   final TextEditingController _explain = TextEditingController();
   
@@ -98,7 +104,16 @@ class _AddScreenState extends State<AddScreen> {
   GestureDetector save(){
     return GestureDetector(
       onTap: (){
+        var add = AddData(
+            selectedItem2!,
+            selectedItem!,
+            _explain.text,
+            _amount.text,
+            date
+        );
 
+        box.add(add);
+        Navigator.of(context).pop();
       },
       child: Container(
         alignment: Alignment.center,

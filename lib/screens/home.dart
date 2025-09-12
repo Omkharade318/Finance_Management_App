@@ -1,81 +1,122 @@
 import 'package:finance/data/list_data.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-class Home extends StatelessWidget {
+import '../data/model/add_data.dart';
+
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  var history;
+  final box = Hive.box<AddData>('data');
+
+  final List<String> day = [
+    'Monday',
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    'friday',
+    'saturday',
+    'sunday'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(height: 320, child: _head()),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Transaction History",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                      ),
+          child: ValueListenableBuilder( valueListenable: box.listenable(),
+            builder: (context, value, child) {
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: 320, child: _head()),
+                  ),
+                  SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Transaction History",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
+                            ),
 
-                      Text(
-                        "See all",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: Colors.grey,
+                            Text(
+                              "See all",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
                         ),
                       )
-                    ],
                   ),
-                )
-              ),
-              SliverList(delegate: SliverChildBuilderDelegate((context, index){
-                return ListTile(
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Image.asset("assets/images/${getter()[index].image!}", height: 40),
-                  ),
-                  title: Text(
-                    getter()[index].name!,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  SliverList(delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                        history = box.values.toList()[index];
+                        return getList(history, index);
+                      },
+                      childCount: box.length
+                  )
+                  )
+                ],
+              );
+            },),
+      ),
+    );
+  }
 
-                  subtitle: Text(
-                    getter()[index].time!,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+  Widget getList(AddData history, int index){
+    return Dismissible(
+        key: UniqueKey(),
+        onDismissed: (direction){
+          history.delete();
+        },
+        child:get(index, history)
+    );
+  }
 
-                  trailing: Text(
-                    getter()[index].fee!,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: getter()[index].buy! ? Colors.red : Colors.green
-                    ),
-                  ),
-                );
-              },
-                childCount: getter().length,
-              )
-              )
-            ],
-          )
+  ListTile get(int index, AddData history){
+    return ListTile(
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: Image.asset("assets/images/${getter()[index].image!}", height: 40),
+      ),
+      title: Text(
+        history.name,
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+
+      subtitle: Text(
+        "${day[history.dateTime.weekday -1]} ${history.dateTime.day}-${history.dateTime.month}-${history.dateTime.year}",
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+
+      trailing: Text(
+        history.amount,
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: history.IN == "Income" ? Colors.green : Colors.red
+        ),
       ),
     );
   }
@@ -301,5 +342,4 @@ class Home extends StatelessWidget {
         ]
     );
   }
-
 }
