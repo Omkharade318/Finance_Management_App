@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../data/model/add_data.dart';
+import '../data/utility.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,9 +22,9 @@ class _HomeState extends State<Home> {
     "Tuesday",
     "Wednesday",
     "Thursday",
-    'friday',
-    'saturday',
-    'sunday'
+    'Friday',
+    'Saturday',
+    'Sunday'
   ];
 
   @override
@@ -93,7 +94,7 @@ class _HomeState extends State<Home> {
     return ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(5),
-        child: Image.asset("assets/images/${getter()[index].image!}", height: 40),
+        child: Image.asset("assets/images/${history.name}.png", height: 40),
       ),
       title: Text(
         history.name,
@@ -111,7 +112,7 @@ class _HomeState extends State<Home> {
       ),
 
       trailing: Text(
-        history.amount,
+        "Rs ${history.amount}",
         style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -237,7 +238,7 @@ class _HomeState extends State<Home> {
                     child: Row(
                       children: [
                         Text(
-                            "Rs 400",
+                            "Rs ${total()}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 26,
@@ -316,7 +317,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            "Rs 200",
+                            "Rs ${income()}",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 17,
@@ -325,7 +326,7 @@ class _HomeState extends State<Home> {
                         ),
 
                         Text(
-                            "Rs 80",
+                            "Rs ${expense()}",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 17,
